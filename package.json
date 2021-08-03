@@ -8,7 +8,8 @@
     "tsc": "tsc",
     "watch": "babel --verbose --watch src --out-dir lib --extensions '.js,.ts,.tsx'",
     "build": "babel src --verbose --out-dir lib --extensions '.js,.ts,.tsx'",
-    "test": "jest"
+    "lock": "git-crypt lock",
+    "unlock": "git-crypt unlock ./git-crypt-13-key"
   },
   "author": "Jim Sharples",
   "license": "ISC",
