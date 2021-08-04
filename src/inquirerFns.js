@@ -24,8 +24,15 @@ function convertDepartmentsToInquirerChoices(departments) {
     return departmentChoices;
 }
 
-function convertEmployeesToInquirerChoices(employees) {
+function convertEmployeesToInquirerChoices(employees,addEmptyEmployee = false) {
     let choices = [];
+    if (addEmptyEmployee) {
+        let choice = {
+            name: "(None)",
+            value: null
+        }
+        choices.push(choice);
+    }
     employees.forEach((employee) => {
         let choice = {
             name: employee.firstname + " " + employee.lastname,

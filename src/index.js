@@ -124,7 +124,7 @@ async function addEmployee() {
             name: "manager",
             type: "list",
             message: "Choose a manager:",
-            choices: convertEmployeesToInquirerChoices(data.employees)
+            choices: convertEmployeesToInquirerChoices(data.employees,true)
         }
     ];
 
@@ -137,9 +137,13 @@ async function addEmployee() {
     // find the department
     const department = data.departments.find((department) => department.id == role.department_id);
     // find the manager
-    const manager = data.employees.find((manager) => manager.id == answers.manager);
+    let manager = {
+        firstname:"",
+        lastname:"",
+        id:null
+    };
+    if (answers.manager != null) manager = data.employees.find((manager) => manager.id == answers.manager)
     // construct the new role in memory
-
     let newEmployee = {
         id: result[0].insertId,
         firstname: answers.firstname,
