@@ -203,24 +203,31 @@ async function addRole() {
     mainLoop();
 }
 
-async function addEmployee() {
+function convertEmployeesToInquirerChoices(employees) {
+    let choices = [];
+    employees.forEach((employee) => {
+        let choice = {
+            name: employee.firstname + " " + employee.lastname,
+            value: employee.id
+        }
+        choices.push(choice);
+    });
+    return choices;
+}
+
+function convertRolesToInquirerChoices(roles) {
     let roleChoices = [];
-    db.roles.forEach((role) => {
+    roles.forEach((role) => {
         let roleChoice = {
             name: role.title,
             value: role.id
         }
         roleChoices.push(roleChoice);
     });
+    return roleChoices;
+}
 
-    let managerChoices = [];
-    db.employees.forEach((employee) => {
-        let managerChoice = {
-            name: employee.firstname + " " + employee.lastname,
-            value: employee.id
-        }
-        managerChoices.push(managerChoice);
-    });
+async function addEmployee() {
 
     const questions = [
         {
@@ -239,13 +246,13 @@ async function addEmployee() {
             name: "role",
             type: "list",
             message: "Choose a role:",
-            choices: roleChoices
+            choices: convertRolesToInquirerChoices(db.roles)
         },
         {
             name: "manager",
             type: "list",
             message: "Choose a manager:",
-            choices: managerChoices
+            choices: convertEmployeesToInquirerChoices(db.employees)
         }
     ];
 
@@ -282,6 +289,37 @@ async function addEmployee() {
 }
 
 async function updateEmployeeRole() {
+    // get the employees to select
+    let questions = [
+        {
+            name: "employee",
+            type: "list",
+            message: "Choose an employee:",
+            choices: convertEmployeesToInquirerChoices(db.employees)
+        },
+        {
+            name: "role",
+            type: "list",
+            message: "Choose a role:",
+            choices: convertRolesToInquirerChoices(db.roles)
+        }
+    ];
+
+    const answers = await inquirer.prompt(questions);
+    debugInq(answers);
+
+    // update the employee
+    const sql = `update employee set role_id=${answers.role} where id = ${answers.employee}`;
+    debugDB(sql);
+    const result = await connection.promise().query(sql);
+    debugDB(result);
+    // find the role name for the id
+    const role = db.roles.find((role) => role.id == answers.role);
+    // find the employee
+    let employee = db.employees.find((employee) => employee.id == answers.employee);
+    // update the new role in memory
+    employee.title = role.title;
+    employee.salary = role.salary;
     mainLoop();
 }
 

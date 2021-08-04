@@ -1,7 +1,7 @@
 {
-  "name": "week-10-homework",
+  "name": "week-13-homework",
   "version": "1.0.0",
-  "description": "A README.md generator",
+  "description": "Employee Management System",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -9,7 +9,7 @@
     "unlock": "git-crypt unlock ./git-crypt-13-key"
   },
   "author": "Jim Sharples",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "console.table": "^0.10.0",
     "dotenv": "^10.0.0",
