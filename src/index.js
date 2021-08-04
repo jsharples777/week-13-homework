@@ -38,10 +38,10 @@ function viewAllDepartments() {
     mainLoop();
 }
 
-function viewAllRoles() {
-    debug('View all roles');
+function viewRoles(roles) {
+    debug('View roles');
     let roleDisplayItems = [];
-    db.roles.forEach((role) => {
+    roles.forEach((role) => {
         let displayItem = {
             id:role.id,
             title:role.title,
@@ -55,9 +55,23 @@ function viewAllRoles() {
     mainLoop();
 }
 
-function viewAllEmployees() {
-    debug('View all employees');
-    console.table(db.employees);
+function viewEmployees(employees) {
+    debug('View employees');
+    let empDisplayItems = [];
+    employees.forEach((employee) => {
+        let displayItem = {
+            id:employee.id,
+            firstname:employee.firstname,
+            lastname: employee.lastname,
+            title: employee.title,
+            salary: employee.salary,
+            department: employee.department,
+            manager: employee.manager
+        }
+        roleDisplayItems.push(displayItem);
+
+    });
+    console.table(employees);
     mainLoop();
 }
 
@@ -87,7 +101,8 @@ async function loadDatabase() {
         'role.title as "title", ' +
         'department.name as "department", ' +
         'role.salary as "salary", ' +
-        'concat(manager.first_name," ",manager.last_name) as "manager" ' +
+        'concat(manager.first_name," ",manager.last_name) as "manager", ' +
+        'emp.manager_id, ' +
     'from ' +
     'employee emp, ' +
         'employee manager, ' +
@@ -106,6 +121,7 @@ async function loadDatabase() {
         'department2.name, ' +
         'role2.salary, ' +
         '"" ' +
+        'null ' +
     'from ' +
         'employee emp2, ' +
         'role role2, ' +
@@ -147,14 +163,7 @@ async function addDepartment() {
 }
 
 async function addRole() {
-    let departmentChoices = [];
-    db.departments.forEach((department) => {
-        let departmentChoice = {
-            name: department.name,
-            value: department.id
-        }
-        departmentChoices.push(departmentChoice);
-    });
+
 
 
     const questions = [
@@ -175,7 +184,7 @@ async function addRole() {
             name: "department",
             type: "list",
             message: "Choose a department:",
-            choices: departmentChoices
+            choices: convertDepartmentsToInquirerChoices(db.departments)
         }
 
     ];
@@ -201,6 +210,18 @@ async function addRole() {
     // add the the new role into our role list
     db.roles.push(newRole);
     mainLoop();
+}
+
+function convertDepartmentsToInquirerChoices(departments) {
+    let departmentChoices = [];
+    departments.forEach((department) => {
+        let departmentChoice = {
+            name: department.name,
+            value: department.id
+        }
+        departmentChoices.push(departmentChoice);
+    });
+    return departmentChoices;
 }
 
 function convertEmployeesToInquirerChoices(employees) {
@@ -280,6 +301,7 @@ async function addEmployee() {
         department: department.name,
         salary:role.salary,
         manager:manager.firstname + " " + manager.lastname,
+        manager_id:manager.id
     }
     debug(newEmployee);
     // add the the new role into our role list
@@ -323,8 +345,53 @@ async function updateEmployeeRole() {
     mainLoop();
 }
 
+async function viewEmployeesByManager() {
+    // get the employees to select
+    let questions = [
+        {
+            name: "manager",
+            type: "list",
+            message: "Choose an employee(manager):",
+            choices: convertEmployeesToInquirerChoices(db.employees)
+        }
+    ];
 
+    const answer = await inquirer.prompt(questions);
+    // filter the employees by manager
+    let employeesForManager = [];
+    db.employees.forEach((employee) => {
+        if (employee.manager_id == answer.manager) {
+            employeesForManager.push(employee);
+        }
+    });
+    viewEmployees(employeesForManager);
 
+    mainLoop();
+}
+
+async function viewEmployeesByDepartment() {
+    // get the employees to select
+    let questions = [
+        {
+            name: "department",
+            type: "list",
+            message: "Choose a Department:",
+            choices: convertDepartmentsToInquirerChoices(db.departments)
+        }
+    ];
+
+    const answer = await inquirer.prompt(questions);
+    // filter the employees by department
+    let employeesForManager = [];
+    db.employees.forEach((employee) => {
+        if (employee.manager_id == answer.manager) {
+            employeesForManager.push(employee);
+        }
+    });
+    viewEmployees(employeesForManager);
+
+    mainLoop();
+}
 
 
 async function showMainMenu() {
@@ -345,6 +412,14 @@ async function showMainMenu() {
                 {
                     name: "View All Employees",
                     value: "show-employees"
+                },
+                {
+                    name: "View employees by manager",
+                    value: "view-employees-by-manager"
+                },
+                {
+                    name: "View employees by department",
+                    value: "view-employees-by-department"
                 },
                 {
                     name: "Add a Department",
@@ -386,11 +461,11 @@ async function mainLoop() {
             break;
         }
         case "show-roles": {
-            viewAllRoles();
+            viewRoles(db.roles);
             break;
         }
         case "show-employees": {
-            viewAllEmployees();
+            viewEmployees(db.employees);
             break;
         }
         case "add-department": {
@@ -407,6 +482,14 @@ async function mainLoop() {
         }
         case "update-employee-role": {
             updateEmployeeRole();
+            break;
+        }
+        case "view-employees-by-manager": {
+            viewEmployeesByManager();
+            break;
+        }
+        case "view-employees-by-department": {
+            viewEmployeesByDepartment();
             break;
         }
         case "exit": {
