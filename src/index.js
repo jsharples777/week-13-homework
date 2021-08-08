@@ -89,7 +89,8 @@ async function addRole() {
         id: result[0].insertId,
         title: answers.title,
         salary: answers.salary,
-        department: department.name
+        department: department.name,
+        department_id: department.id
     }
     debug(newRole);
     // add the the new role into our role list
@@ -238,7 +239,7 @@ function calculateForDepartment(department, roles, employees) {
         if (role.department_id == department.id) {
             employees.forEach((employee) => {
                 if (employee.role_id == role.id) {
-                    budget += parseInt(role.salary);
+                    budget += parseInt(employee.salary);
                 }
             });
         }

@@ -39,8 +39,9 @@ To execute the application, use a command line interface (CLI) such as terminal 
 
 # Walkthrough Video
 
-1.  Invocation of application and basic views  [walkthrough part 1](https://drive.google.com/file/d/1-oK6Xb5BSsQx2W11IBQ1Cy3Dvn80cxBB/view)
-2.  Bonus criteria [walkthrough part 2](https://drive.google.com/file/d/1m9UDnPNW076lJxg8-3GgiFK9iNss1f1f/view)
+1.  Showing packages use and database structure [walkthrough part 1](https://drive.google.com/file/d/1KSw7_XL0XIgx21I5UGa7pWjbQaa7BoTj/view)
+2.  Invocation of application and basic views  [walkthrough part 2](https://drive.google.com/file/d/1Bj7o-IOvPLHOHZrM8AZxB5IQh69F3UNh/view)
+3.  (Some) Bonus criteria [walkthrough part 3](https://drive.google.com/file/d/1fRRhJDs6v3iDcSW1beo5-NFz4PrKXHW9/view)
 
 ## How to contribute
 
