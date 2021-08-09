@@ -191,6 +191,7 @@ async function updateEmployeeRole() {
     // update the new role in memory
     employee.title = role.title;
     employee.salary = role.salary;
+    employee.role_id = role.id;
     mainLoop();
 }
 
