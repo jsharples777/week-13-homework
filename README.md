@@ -25,7 +25,9 @@ The user can update the role of an employee after creation if desired.
 # Installation Instructions
 
 1.  Install [node.js](http://nodejs.org)
-2.  Using the installed Node Package Manager `npm`, execute `npm install` to install the required libraries.
+2.  Connect to the MySQL database and run `source schema.sql;` to create the tables
+3.  Connect to the MySQL database and run `source seed.sql;` to load the test data  
+4.  Using the installed Node Package Manager `npm`, execute `npm install` to install the required libraries.
 
 
 # Usage
